@@ -1,7 +1,19 @@
-----------------------------------------------------------------------------------
--- Generic binary input module for providing inputs to other circuits
+-----------------------------------------------------------------------------
+-- Generic binary input module for use with prototype board.
+-- Provides inputs that can be used by other circuits for various purposes.
 -- Jon Turner - 10/2011
-----------------------------------------------------------------------------------
+--
+-- inputs
+--    btn       four bit signal from external buttons
+--    knobSigs  three bit signal from external knob
+--
+-- outputs
+--    resetOut  reset signal derived from btn(0)
+--    dBtn	debounced versions of btn(3..1)
+--    pulse     one clock tick pulses, derived from btn(3..1)
+--    inBits    16 bit value controlled by knob
+-----------------------------------------------------------------------------
+
 library IEEE;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -10,11 +22,13 @@ use work.commonDefs.all;
 
 entity binaryInMod is port(
 	clk: in std_logic;
+	-- external signals for buttons and knob
 	btn: in buttons;
 	knob: in knobSigs;
+	-- outputs intended for internal use
 	resetOut: out std_logic;
-	dBtn: out std_logic_vector(3 downto 1);
-	pulse: out std_logic_vector(3 downto 1);
+	dBtn: out std_logic_vector(3 downto 1); 
+	pulse: out std_logic_vector(3 downto 1); 
 	inBits: out word);
 end binaryInMod;
 
@@ -36,38 +50,43 @@ component knobIntf port(
 	delta: out word); 
 end component;
 
+-- debounced buttons and knob signals
 signal dbb, dbb_prev: buttons;
 signal dbKnob: knobSigs;
-signal reset: std_logic;
+
+signal reset: std_logic;	-- debounced btn(0)
+
+-- outputs from knob interface
 signal tick, clockwise: std_logic;
 signal bits, delta: word;
-begin
-	-- debounce the buttons	and define reset/resetOut
-	db: debouncer generic map(width => 4) port map(clk, btn, dbb);
-	
-	dBtn <= dbb(3 downto 1);
-	reset <= dbb(0);
-	resetOut <= reset;
-	
-	-- define pulse output using debounced buttons
-	process (clk) begin
-		if rising_edge(clk) then dbb_prev <= dbb; end if;
-	end process;	
-	pulse <= dbb(3 downto 1) and (not dbb_prev(3 downto 1));
 
-	-- define inBits, based on signals from knob interface
+-- data bits controlled by knob
+signal bits : word;
+begin
+	-- debounce the buttons	and knob
+	db1: debouncer generic map(width => 4) port map(clk, btn, dbb);
+	db2: debouncer generic map(width => 3) port map(clk, knob, dbKnob);
+	
+	-- define dBtn output signals and reset
+	dBtn <= dbb(3 downto 1);
+	reset <= dbb(0); resetOut <= reset;
+	
 	ki: knobIntf port map(clk, reset, knob, tick, clockwise, delta);
+
+	-- define pulse and data bits
 	process (clk) begin
 		if rising_edge(clk) then
+			dbb_prev <= dbb;
 			if reset = '1' then
 				bits <= (others => '0');
 			elsif tick = '1' then
 				if  clockwise = '1' then bits <= bits + delta;
-				else							 bits <= bits - delta;
+				else			 bits <= bits - delta;
 				end if;
 			end if;
 		end if;
 	end process;
+	pulse <= dbb(3 downto 1) and (not dbb_prev(3 downto 1));
 	inBits <= bits;
 end a1;
 
