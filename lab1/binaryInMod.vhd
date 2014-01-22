@@ -58,7 +58,7 @@ signal reset: std_logic;	-- debounced btn(0)
 
 -- outputs from knob interface
 signal tick, clockwise: std_logic;
-signal bits, delta: word;
+signal delta: word;
 
 -- data bits controlled by knob
 signal bits : word;
