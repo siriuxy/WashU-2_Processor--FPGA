@@ -50,9 +50,8 @@ component knobIntf port(
 	delta: out word); 
 end component;
 
--- debounced buttons and knob signals
+-- debounced buttons
 signal dbb, dbb_prev: buttons;
-signal dbKnob: knobSigs;
 
 signal reset: std_logic;	-- debounced btn(0)
 
@@ -65,7 +64,6 @@ signal bits : word;
 begin
 	-- debounce the buttons	and knob
 	db1: debouncer generic map(width => 4) port map(clk, btn, dbb);
-	db2: debouncer generic map(width => 3) port map(clk, knob, dbKnob);
 	
 	-- define dBtn output signals and reset
 	dBtn <= dbb(3 downto 1);
