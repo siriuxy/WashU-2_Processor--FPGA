@@ -12,7 +12,7 @@ use ieee.std_logic_unsigned.all;
 use work.commonDefs.all;
 
 entity binaryOutMod is port(
-	clk, reset: in std_logic;
+	clk, reset, error: in std_logic;
 	topRow, botRow: in word;
 	-- signals for controlling LCD display 
 	lcd: out lcdSigs);
@@ -47,7 +47,8 @@ begin
 	update <= '1' when lowBits = (lowBits'range => '0') else '0';
 	selekt <= counter(CNTR_LENGTH-1 downto CNTR_LENGTH-5);
 	
-	nuchar <= x"30" when (selekt(4) = '0' and 
+	nuchar <= x"2d" when (error='1') else
+				 x"30" when (selekt(4) = '0' and 
 							    topRow((wordSize-1)-int(selekt(3 downto 0))) = '0') or
 							   (selekt(4) = '1' and 
 							    botRow((wordSize-1)-int(selekt(3 downto 0))) = '0') else

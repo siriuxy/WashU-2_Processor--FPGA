@@ -25,9 +25,10 @@ architecture a1 of top is
 
 component calculator port (
 	clk: in std_logic;
-	clear, load, add: in std_logic;
+	clear, load, add, mode: in std_logic;
 	din : in word;
-	result: out word);
+	result: out word;
+	error: out std_logic); --add error output
 end component;
 
 component binaryInMod port(
@@ -41,12 +42,12 @@ component binaryInMod port(
 end component;
 
 component binaryOutMod port(
-	clk, reset: in std_logic;
+	clk, reset, error: in std_logic;
 	topRow, botRow: in word;
 	lcd: out lcdSigs);
 end component binaryOutMod;
 
-signal reset, clear, load, add: std_logic;
+signal reset, clear, load, add, mode, error: std_logic;
 signal dBtn, pulse: std_logic_vector(3 downto 1);
 signal inBits, outBits: word;
 
@@ -54,15 +55,17 @@ begin
 	
    -- connect the sub-components	
 	imod: binaryInMod port map(clk,btn,knob,reset,dBtn,pulse,inBits);
-	calc: calculator port map(clk,clear,load,add,inBits,outBits);
-	omod: binaryOutMod port map(clk,reset,inBits,outBits,lcd);
+	calc: calculator port map(clk,clear,load,add,mode,inBits,outBits,error);
+	omod: binaryOutMod port map(clk,reset,error,inBits,outBits,lcd);
 	
 	-- define internal control signals
 	clear <= dBtn(1) or reset;
 	load <= pulse(2);
 	add <= pulse(3);
+	mode<=swt(0);
 	
 	-- connect a few input and output bits to leds
-	led(7 downto 4) <= inbits(3 downto 0); 
-	led(3 downto 0) <= outBits(3 downto 0);
+	led(7 downto 2) <= ("000000"); 
+	led(0)<=mode;
+	led(1)<=error;
 end a1;
