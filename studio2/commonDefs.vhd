@@ -38,5 +38,5 @@ use IEEE.std_logic_unsigned.all;
 package body commonDefs is
    function int(d: std_logic_vector) return integer is
    -- Convert logic vector to integer. Handy for array indexing. 
-   begin return conv_integer(unsigned(d)); end function int;
+   begin return to_integer(unsigned(d)); end function int;
 end package body commonDefs;
