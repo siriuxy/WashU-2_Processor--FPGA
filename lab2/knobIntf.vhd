@@ -21,7 +21,7 @@
 
 library IEEE;
 use IEEE.std_logic_1164.all;
-use IEEE.numeric_std.all;
+use IEEE.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
 use work.commonDefs.all;
 
@@ -30,7 +30,7 @@ entity knobIntf is port(
 	knob: in knobSigs; 				-- knob signals
 	tick: out std_logic;				-- high for each knob transition
 	clockwise: out std_logic;		-- high for clockwise rotation
-	delta: out std_logic_vector(15 downto  0));  -- amount to add/subtract per tick
+	delta: out word);  				-- amount to add/subtract per tick
 end knobIntf;
 
 architecture a1 of knobIntf is
@@ -46,7 +46,7 @@ end component;
 signal dbKnob: knobSigs;
 signal rot, prevRot: std_logic_vector(1 downto 0);	
 signal btn, prevBtn: std_logic;
-signal diff : std_logic_vector(15 downto  0);
+signal diff : std_logic_vector(15 downto 0);
 begin
 	-- debounce the knob signals and separate the rotational signals
 	-- from the button press
@@ -62,18 +62,14 @@ begin
 				clockwise <= '1';
 			else
 				if prevRot = "00" and rot = "01" then
-					tick <= '1'; clockwise <= '1'; 
+					tick <= '1'; clockwise <= '0'; 
 				end if;
 				if prevRot = "10" and rot = "11" then
-					tick <= '1'; clockwise <= '0';
+					tick <= '1'; clockwise <= '1';
 				end if;
 				
 				if btn > prevBtn then
-					if diff(15 downto 12) /= "0000" then
-						diff <= (0 => '1', others => '0');
-					else
-						diff <= diff(11 downto 0) & "0000";
-					end if;
+					diff <= diff(11 downto 0) & diff(15 downto 12);
 				end if;
 			end if;	
 		end if;
