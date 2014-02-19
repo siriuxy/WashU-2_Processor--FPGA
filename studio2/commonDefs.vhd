@@ -11,7 +11,7 @@ package commonDefs is
 	constant nSwt: integer := 4; -- number of switches
 	constant nLED: integer := 8; -- number of LEDs
 	 
-	constant operationMode: integer := 0; -- 0 for sim, 1 for proto board
+	constant operationMode: integer := 1; -- 0 for sim, 1 for proto board
 	constant debounceBits: integer := 2 + operationMode*14; 
 	 
 	subtype word is std_logic_vector(wordSize-1 downto 0);

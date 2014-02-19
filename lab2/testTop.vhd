@@ -2,6 +2,13 @@
 -- Test Pattern Matcher from top
 
 -- Jon Turner, 12/2013
+
+-- Modified by Likai Yan 02/2014
+
+-- Modification: I have added a few test as instructed in the comment. The circuit
+-- can be tested for: 1. three repeated b and all pass, 2.recognize pattern a, but failed,
+-- 3. recognize pattern ab{n}, but failed to proceed. 4. recognize pattern ac, but failed to proceed. 
+-- 5. a few other tests with different num of a and b 
 --------------------------------------------------------------------------------
 LIBRARY ieee;
 use ieee.std_logic_1164.all;
@@ -140,31 +147,49 @@ BEGIN
 		-- start with a set of tests using a repeat count of 3	  
 		-- first test all the cases where the input matches the pattern
 		-- be sure to to use all the state-machine transitions that
-		-- lead to successful matches
-	
-		-- TODO - add tests
+		-- lead to successful matche
 		
+		restart(x"3");
+		nextSymVec(x"01113fffff");--  a->bbb->d
+		nextSymVec(x"023fffffff");--  a->c->d
+		nextSymVec(x"0023213fff");--  some other test that also pass with aa
 	
 		-- next add cases that fail after matching one or more initial
 		-- 'a' characters
 	
-		-- TODO - add tests
 		
+		nextSymVec(x"03ffffffff");
+		nextSymVec(x"07ffffffff");--fail after matching a.
+
 		
 		-- now cases that fail after matching ab
 	
-		-- TODO - add tests
+		nextSymVec(x"01110fffff");  --abbba
+		nextSymVec(x"01111fffff");	 --abbbb
+		nextSymVec(x"01112fffff");  --abbbc
+		nextSymVec(x"01115fffff");  --abbbf
+		nextSymVec(x"0110ffffff"); --fail after matching ab.
 	
 		
 		-- and finally, cases that fail after matching ac
-	
-		-- TODO - add tests
+		nextSymVec(x"020fffffff"); --aca
+		nextSymVec(x"021fffffff"); --acb
+		nextSymVec(x"022fffffff"); --acc
+
 	
 	
 		-- now, a few more tests using a repeat count of 1
+	restart(x"1");
+		nextSymVec(x"013fffffff");--abd(p)
+		nextSymVec(x"003fffffff");--aad(f)
+		nextSymVec(x"0113ffffff");--abbd(f)
+		nextSymVec(x"023fffffff");--acd(p)
+		nextSymVec(x"0223ffffff");--accd(f)
+		nextSymVec(x"231fffffff");--cdb(f)
+
 	
-		-- TODO - add tests
-	
+	      wait for 50 ns;--wait for the graph!	
+
 	
 		assert (false) report "normal termination" severity failure;
 	end process;

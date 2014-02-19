@@ -35,7 +35,7 @@ begin
 			elsif load = '1' then
 				dReg <= dIn;
 			elsif add = '1' then
-				dReg <= dReg + dIn;
+				dReg <= dReg + dIn ;
 			end if;
 		end if;
 	end process;

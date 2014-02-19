@@ -46,14 +46,14 @@ begin
 		clear <= '0'; load <= '1'; add <= '0'; dIn <= x"ffff"; wait for 20 ns;
 		clear <= '0'; load <= '1'; add <= '1'; dIn <= x"ffff"; wait for 20 ns;
 		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0001"; wait for 20 ns;
-		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0002"; wait for 20 ns;
 		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0003"; wait for 20 ns;
-		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0004"; wait for 20 ns;
-		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0100"; wait for 20 ns;
-		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0200"; wait for 20 ns;
-		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0300"; wait for 20 ns;
-		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0400"; wait for 20 ns;
-		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0500"; wait for 20 ns;
+		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0005"; wait for 20 ns;
+		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0007"; wait for 20 ns;
+		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0110"; wait for 20 ns;
+		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0220"; wait for 20 ns;
+		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0330"; wait for 20 ns;
+		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0440"; wait for 20 ns;
+		clear <= '0'; load <= '0'; add <= '1'; dIn <= x"0550"; wait for 20 ns;
 		wait for 20 ns;
 		
 		assert (false) report "Simulation ended normally." severity failure;

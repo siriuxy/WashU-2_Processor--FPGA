@@ -62,7 +62,7 @@ begin
 	obstruction <= inBits(2) and pulse(2);
 	atTop 		<= inBits(1) and pulse(2);     
 	atBot 		<= inBits(0) and pulse(2);	
-	outBits <= (1 => goUp, 0 => goDown, others => '0');
+	outBits <= (1 => goUp, 0 => goDown, others => '0'); --pause?
 	
    -- connect the sub-components	
 	imod: binaryInMod port map(clk,btn,knob,reset,dBtn,pulse,inBits);
