@@ -12,7 +12,7 @@ package commonDefs is
 	constant nSwt: integer := 4; -- number of switches
 	constant nLED: integer := 8; -- number of LEDs
 	 
-	constant operationMode: integer := 1; -- use 0 for simulation, 1 for S3 board
+	constant operationMode: integer := 0; -- use 0 for simulation, 1 for S3 board
 	constant debounceBits: integer := 2 + operationMode*14;
 
 	-- subtypes used by vgaDisplay module
