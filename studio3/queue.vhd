@@ -14,7 +14,7 @@ use work.commonDefs.all;
 
 entity queue is
 	generic(
-		qSiz: integer := 16;
+		qSiz: integer := 16; --original val 16
 		lgSiz: integer := 4;
 		wordSiz: integer := 16);
 	port( 

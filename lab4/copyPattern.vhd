@@ -1,6 +1,9 @@
 ------------------------------------------------------------------------------
 -- copyPattern - copies a pattern to the VGA display buffer
 -- Jon Turner - 2/2012
+-- Modified by Jordan Helderman, Likai Yan: 
+-- initAdr and advAdr are modified from the one given in studio 4 to fit 
+-- this lab.
 --
 --   This module is used to support the fifteenPuzzle circuit.
 -- It defines 16 patterns for the tiles in a 15 puzzle and
@@ -53,6 +56,8 @@ component vgaDisplay port (
    dispPix: out pixel);
 end component;
 
+--constant coordMap : pos2CoordMap :=(
+--	x"00", x"01", x"02", x"03", x"10"
 subtype patRow is std_logic_vector(3*20-1 downto 0);
 type patArray is array(natural range <>) of patRow;
 constant patMem: patArray := (
@@ -425,8 +430,17 @@ begin
                         signal dAdr: out dbAdr; 
                         signal pAdr: inout std_logic_vector(8 downto 0); 
                         signal pOffset: out byte) is
+		variable row, col: unsigned(2*dAdr'length-1 downto 0);
       begin
-         -- TODO
+			-- placeholders for the position in the display buffer
+			-- constant offset accounts for the centering of the board on 
+			--		the VGA display
+			row := to_unsigned(20*320,dAdr'length)*pad(unsigned(pos(3 downto 2)) + 4,dAdr'length);
+			col := to_unsigned(20,dAdr'length)*pad(unsigned(pos(1 downto 0)) + 4,dAdr'length);
+			
+			dAdr <= row(dAdr'high downto 0) + col(dAdr'high downto 0);
+			pAdr <= pad(slv(20,9)*pad(pat,8),9);
+			pOffset <= slv(59,8);
       end;
       -- Advance address signals used to access the pattern memory 
       -- and display buffer
@@ -434,7 +448,14 @@ begin
                            signal pAdr: inout std_logic_vector(8 downto 0); 
                            signal pOffset: inout byte) is 
       begin
-         -- TODO
+			if pOffset = 2 then
+				pAdr <= pAdr + 1;
+				pOffset <= slv(59,8);
+				dAdr <= dAdr + to_unsigned(320-19,dAdr'length);
+			else
+				pOffset <= pOffset - 3;
+				dAdr <= dAdr + 1;
+			end if;
       end;   
    begin
       if rising_edge(clk) then

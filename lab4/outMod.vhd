@@ -72,5 +72,82 @@ begin
    -- based on selekt, puzlTime, bestTime
    process(selekt, puzlTime, bestTime) begin
       -- TODO
+		-- assign the appropriate value to nuChar for the top and bottom row
+		if selekt(4) = '0' then	-- top row
+			case selekt(3 downto 0) is
+				when x"0" =>
+					nuchar <= c2b('p');
+				when x"1" =>
+					nuchar <= c2b('u');
+				when x"2" =>
+					nuchar <= c2b('z');
+				when x"3" =>
+					nuchar <= c2b('l');
+				when x"4" =>
+					nuchar <= c2b('T');
+				when x"5" =>
+					nuchar <= c2b('i');
+				when x"6" =>
+					nuchar <= c2b('m');
+				when x"7" =>
+					nuchar <= c2b('e');
+			--added spaces between string and timer
+				when x"8"=>
+					nuchar <= c2b(' ');
+				when x"9"=>
+					nuchar <= c2b(' ');
+				when x"a" =>
+					nuchar <= c2b(hex2ascii(int(puzlTime(5))));
+				when x"b" =>
+					nuchar <= c2b(hex2ascii(int(puzlTime(4))));
+				when x"c" =>
+					nuchar <= c2b(hex2ascii(int(puzlTime(3))));
+				when x"d" =>
+					nuchar <= c2b(hex2ascii(int(puzlTime(2))));
+				when x"e" =>
+					nuchar <= c2b(hex2ascii(int(puzlTime(1))));
+				when x"f" =>
+					nuchar <= c2b(hex2ascii(int(puzlTime(0))));
+				when others =>
+				
+			end case;
+		else							-- bottom row
+			case selekt(3 downto 0) is
+				when x"0" =>
+					nuchar <= c2b('b');
+				when x"1" =>
+					nuchar <= c2b('e');
+				when x"2" =>
+					nuchar <= c2b('s');
+				when x"3" =>
+					nuchar <= c2b('t');
+				when x"4" =>
+					nuchar <= c2b('T');
+				when x"5" =>
+					nuchar <= c2b('i');
+				when x"6" =>
+					nuchar <= c2b('m');
+				when x"7" =>
+					nuchar <= c2b('e');
+				when x"8"=>
+					nuchar <= c2b(' ');
+				when x"9"=>
+					nuchar <= c2b(' ');
+				when x"a" =>
+					nuchar <= c2b(hex2ascii(int(bestTime(5))));
+				when x"b" =>
+					nuchar <= c2b(hex2ascii(int(bestTime(4))));
+				when x"c" =>
+					nuchar <= c2b(hex2ascii(int(bestTime(3))));
+				when x"d" =>
+					nuchar <= c2b(hex2ascii(int(bestTime(2))));
+				when x"e" =>
+					nuchar <= c2b(hex2ascii(int(bestTime(1))));
+				when x"f" =>
+					nuchar <= c2b(hex2ascii(int(bestTime(0))));
+				when others =>
+				
+			end case;
+		end if;
    end process;
 end a1;

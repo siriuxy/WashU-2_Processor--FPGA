@@ -25,8 +25,8 @@ component queue
 		empty, full : out std_logic);	-- status signals
 end component;
 
-constant queueLen: integer := 8;
-constant lgLen: integer := 3;
+constant queueLen: integer := 10; --modified to 10
+constant lgLen: integer  := 3;
 constant theWordSiz: integer := 16;
 
 signal clk, resetSig : std_logic := '0';
@@ -64,11 +64,17 @@ begin
 	-- dequeue the item at the front of the queue
 	procedure deq is begin 
 		-- TODO
+		deqSig<='1'; wait for clk_period; deqSig<='0'; wait for pause;
 	end;
 	
 	-- do simultaneous enqueue and dequeue operations
 	procedure edq(inval: integer) is begin 
 		-- TODO
+		inBits <= slv(inval,theWordSiz);
+		enqSig <= '1'; wait for clk_period; 
+		enqSig <= '0'; wait for pause; 
+		deqSig<='1'; wait for clk_period; deqSig<='0'; wait for pause;
+
 	end;
 	begin		
       wait for 100 ns;	
@@ -86,11 +92,12 @@ begin
 		end loop;
 		
 		-- TODO - check that full is high
+		assert full='1' report "full is not high";
 		
 		-- attempt to enq again
 		enq(9);
-		-- TODO - check front value
 		
+		assert int(outbits)=  1 report "incorrect front value " & str(outbits);
 		-- and simultaneous enq/deq
 		edq(10);
 		assert int(outbits) = 2 report "incorrect front value " & str(outbits);
@@ -98,12 +105,15 @@ begin
 		-- deq until queue is empty
 		for i in 2 to 8 loop
 			-- TODO - check that queue is not empty
+			assert empty='0' report "empty is low";
 			-- TODO - check that front value is correct
+			assert int(outbits)= i report "incorrect front val";
 			deq; 
 			-- TODO - check that queue is not full
+			assert full='0' report "full signal is high";
 		end loop;
 		
-		assert int(outbits) = 10 report "incorrect front value when emptying" & str(outbits);
+		assert int(outbits) = 10 report "incorrect front value when emptying" & str(outbits);	
 		deq; 
 		
 		assert empty = '1' report "empty signal low when queue is empty";
