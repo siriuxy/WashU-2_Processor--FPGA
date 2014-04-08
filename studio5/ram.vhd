@@ -36,10 +36,7 @@ signal ramm: ramType := (
 );
 
 -- monitoring registers to aid in simulation
-signal i, j, q, r : word;
-signal div_x, div_y, div_q, div_r, div_i : word;
-signal mult_a, mult_b, mult_prod, mult_mask : word;
-signal etch_pix, etch_x, etch_y, etch_p, etch_q, etch_r: word;
+signal i, j, p : word;
 
 begin	
 	addr <= aBus(13 downto 0);
@@ -52,23 +49,7 @@ begin
 					-- update monitoring registers for simulation
 					if addr = "00" & x"0f0" then i <= dBus; end if;
 					if addr = "00" & x"0f1" then j <= dBus; end if;
-					if addr = "00" & x"0f2" then q <= dBus; end if;
-					if addr = "00" & x"0f3" then r <= dBus; end if;
-					if addr = "00" & x"100" then div_x <= dBus; end if;
-					if addr = "00" & x"101" then div_y <= dBus; end if;
-					if addr = "00" & x"102" then div_q <= dBus; end if;
-					if addr = "00" & x"103" then div_r <= dBus; end if;
-					if addr = "00" & x"1f0" then div_i <= dBus; end if;
-					if addr = "00" & x"200" then mult_a <= dBus; end if;
-					if addr = "00" & x"201" then mult_b <= dBus; end if;
-					if addr = "00" & x"202" then mult_prod <= dBus; end if;
-					if addr = "00" & x"2f0" then mult_mask <= dBus; end if;
-					if addr = "00" & x"3f0" then etch_pix <= dBus; end if;
-					if addr = "00" & x"3f1" then etch_x <= dBus; end if;
-					if addr = "00" & x"3f2" then etch_y <= dBus; end if;
-					if addr = "00" & x"3f3" then etch_p <= dBus; end if;
-					if addr = "00" & x"3f4" then etch_q <= dBus; end if;
-					if addr = "00" & x"3f5" then etch_r <= dBus; end if;
+					if addr = "00" & x"0f2" then p <= dBus; end if;
 				else
 					dBus <= ramm(int(addr));
 				end if;
